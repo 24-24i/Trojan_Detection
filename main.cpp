@@ -9,4 +9,5 @@ int main(int argc, char *argv[])
     Widget w;//主窗口
     w.show();
     return a.exec();
+    //jjjjjj
 }
