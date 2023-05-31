@@ -1,0 +1,5 @@
+﻿  firstwidget.cpp
+firstwidget.cpp(317,43): warning C4100: “event”: 未引用的形参
+  moc_widget.cpp
+  LINK : 没有找到 debug\\demo1.exe 或上一个增量链接没有生成它；正在执行完全链接
+  demo1.vcxproj -> D:\QT Program\Trojan_Detection\debug\demo1.exe

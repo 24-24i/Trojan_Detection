@@ -1,0 +1,622 @@
+module xS clk   in  out  ;
+wire  _000_ ;
+wire  _001_ ;
+wire  _002_ ;
+wire  _003_ ;
+wire  _004_ ;
+wire  _005_ ;
+wire  _006_ ;
+wire  _007_ ;
+wire  _008_ ;
+wire  _009_ ;
+wire  _010_ ;
+wire  _011_ ;
+wire  _012_ ;
+wire  _013_ ;
+wire  _014_ ;
+wire  _015_ ;
+wire  _016_ ;
+wire  _017_ ;
+wire  _018_ ;
+wire  _019_ ;
+wire  _020_ ;
+wire  _021_ ;
+wire  _022_ ;
+wire  _023_ ;
+wire  _024_ ;
+wire  _025_ ;
+wire  _026_ ;
+wire  _027_ ;
+wire  _028_ ;
+wire  _029_ ;
+wire  _030_ ;
+wire  _031_ ;
+wire  _032_ ;
+wire  _033_ ;
+wire  _034_ ;
+wire  _035_ ;
+wire  _036_ ;
+wire  _037_ ;
+wire  _038_ ;
+wire  _039_ ;
+wire  _040_ ;
+wire  _041_ ;
+wire  _042_ ;
+wire  _043_ ;
+wire  _044_ ;
+wire  _045_ ;
+wire  _046_ ;
+wire  _047_ ;
+wire  [7:0] _048_ ;
+input  clk ;
+input  [7:0] in ;
+output  [7:0] out ;
+LUT6  # 
+    .INIT 64'hc7ce63f031a7a970 
+    _049_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[7]  
+    .I4 in[5]  
+    .I5 in[3]  
+    .O _002_ 
+    ;
+LUT6  # 
+    .INIT 64'h2d72836c77af41a2 
+    _050_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[7]  
+    .I4 in[5]  
+    .I5 in[3]  
+    .O _003_ 
+    ;
+MUXF7   _051_  
+    .I0 _002_  
+    .I1 _003_  
+    .O _000_  
+    .S in[6] 
+    ;
+LUT6  # 
+    .INIT 64'h475290b7b0acc299 
+    _052_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[7]  
+    .I4 in[5]  
+    .I5 in[3]  
+    .O _004_ 
+    ;
+LUT6  # 
+    .INIT 64'h59ecbe8a3eb84e68 
+    _053_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[7]  
+    .I4 in[5]  
+    .I5 in[3]  
+    .O _005_ 
+    ;
+MUXF7   _054_  
+    .I0 _004_  
+    .I1 _005_  
+    .O _001_  
+    .S in[6] 
+    ;
+MUXF8   _055_  
+    .I0 _000_  
+    .I1 _001_  
+    .O _048_[0]  
+    .S in[2] 
+    ;
+LUT6  # 
+    .INIT 64'h229ec185d636fd6f 
+    _056_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[0]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _008_ 
+    ;
+LUT6  # 
+    .INIT 64'hb3a1054febcccac0 
+    _057_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[0]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _009_ 
+    ;
+MUXF7   _058_  
+    .I0 _008_  
+    .I1 _009_  
+    .O _006_  
+    .S in[5] 
+    ;
+LUT6  # 
+    .INIT 64'h9fa548cb1ee9aaa6 
+    _059_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[0]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _010_ 
+    ;
+LUT6  # 
+    .INIT 64'h274461be2e8b3205 
+    _060_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[0]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _011_ 
+    ;
+MUXF7   _061_  
+    .I0 _010_  
+    .I1 _011_  
+    .O _007_  
+    .S in[5] 
+    ;
+MUXF8   _062_  
+    .I0 _006_  
+    .I1 _007_  
+    .O _048_[1]  
+    .S in[7] 
+    ;
+LUT6  # 
+    .INIT 64'h7d00ce7b2afa357b 
+    _063_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[2]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _014_ 
+    ;
+LUT6  # 
+    .INIT 64'he62a1c3e976f817c 
+    _064_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[2]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _015_ 
+    ;
+MUXF7   _065_  
+    .I0 _014_  
+    .I1 _015_  
+    .O _012_  
+    .S in[6] 
+    ;
+LUT6  # 
+    .INIT 64'h6c0d234ef58652d2 
+    _066_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[2]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _016_ 
+    ;
+LUT6  # 
+    .INIT 64'ha897702092b8ecc9 
+    _067_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[2]  
+    .I3 in[4]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _017_ 
+    ;
+MUXF7   _068_  
+    .I0 _016_  
+    .I1 _017_  
+    .O _013_  
+    .S in[6] 
+    ;
+MUXF8   _069_  
+    .I0 _012_  
+    .I1 _013_  
+    .O _048_[2]  
+    .S in[7] 
+    ;
+LUT6  # 
+    .INIT 64'h26284a268c44d5f6 
+    _070_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _020_ 
+    ;
+LUT6  # 
+    .INIT 64'h6ced81ada3dccd62 
+    _071_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _021_ 
+    ;
+MUXF7   _072_  
+    .I0 _020_  
+    .I1 _021_  
+    .O _018_  
+    .S in[7] 
+    ;
+LUT6  # 
+    .INIT 64'hca4b122dfad9c39c 
+    _073_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _022_ 
+    ;
+LUT6  # 
+    .INIT 64'hf2eb02e711b3cee1 
+    _074_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[6]  
+    .O _023_ 
+    ;
+MUXF7   _075_  
+    .I0 _022_  
+    .I1 _023_  
+    .O _019_  
+    .S in[7] 
+    ;
+MUXF8   _076_  
+    .I0 _018_  
+    .I1 _019_  
+    .O _048_[3]  
+    .S in[5] 
+    ;
+LUT6  # 
+    .INIT 64'h2734a42bdf6f200c 
+    _077_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[4]  
+    .I4 in[0]  
+    .I5 in[5]  
+    .O _026_ 
+    ;
+LUT6  # 
+    .INIT 64'h996c8c0169ffd8ef 
+    _078_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[4]  
+    .I4 in[0]  
+    .I5 in[5]  
+    .O _027_ 
+    ;
+MUXF7   _079_  
+    .I0 _026_  
+    .I1 _027_  
+    .O _024_  
+    .S in[6] 
+    ;
+LUT6  # 
+    .INIT 64'hc6da39d745758ab4 
+    _080_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[4]  
+    .I4 in[0]  
+    .I5 in[5]  
+    .O _028_ 
+    ;
+LUT6  # 
+    .INIT 64'h2f1860a5492fce4c 
+    _081_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[4]  
+    .I4 in[0]  
+    .I5 in[5]  
+    .O _029_ 
+    ;
+MUXF7   _082_  
+    .I0 _028_  
+    .I1 _029_  
+    .O _025_  
+    .S in[6] 
+    ;
+MUXF8   _083_  
+    .I0 _024_  
+    .I1 _025_  
+    .O _048_[4]  
+    .S in[7] 
+    ;
+LUT6  # 
+    .INIT 64'hcf29b7075b21b18e 
+    _084_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _032_ 
+    ;
+LUT6  # 
+    .INIT 64'h2b622846becc4b84 
+    _085_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _033_ 
+    ;
+MUXF7   _086_  
+    .I0 _032_  
+    .I1 _033_  
+    .O _030_  
+    .S in[7] 
+    ;
+LUT6  # 
+    .INIT 64'hf77af41940cfe538 
+    _087_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _034_ 
+    ;
+LUT6  # 
+    .INIT 64'hfa231a0ec2ee4573 
+    _088_  
+    .I0 in[0]  
+    .I1 in[1]  
+    .I2 in[4]  
+    .I3 in[2]  
+    .I4 in[3]  
+    .I5 in[5]  
+    .O _035_ 
+    ;
+MUXF7   _089_  
+    .I0 _034_  
+    .I1 _035_  
+    .O _031_  
+    .S in[7] 
+    ;
+MUXF8   _090_  
+    .I0 _030_  
+    .I1 _031_  
+    .O _048_[5]  
+    .S in[6] 
+    ;
+LUT6  # 
+    .INIT 64'h263c7cc26ab4a7ff 
+    _091_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[0]  
+    .I4 in[4]  
+    .I5 in[6]  
+    .O _038_ 
+    ;
+LUT6  # 
+    .INIT 64'h7998f30ae0c237fd 
+    _092_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[0]  
+    .I4 in[4]  
+    .I5 in[6]  
+    .O _039_ 
+    ;
+MUXF7   _093_  
+    .I0 _038_  
+    .I1 _039_  
+    .O _036_  
+    .S in[5] 
+    ;
+LUT6  # 
+    .INIT 64'h331b473b1425b260 
+    _094_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[0]  
+    .I4 in[4]  
+    .I5 in[6]  
+    .O _040_ 
+    ;
+LUT6  # 
+    .INIT 64'h0de421856af3a1ab 
+    _095_  
+    .I0 in[1]  
+    .I1 in[2]  
+    .I2 in[3]  
+    .I3 in[0]  
+    .I4 in[4]  
+    .I5 in[6]  
+    .O _041_ 
+    ;
+MUXF7   _096_  
+    .I0 _040_  
+    .I1 _041_  
+    .O _037_  
+    .S in[5] 
+    ;
+MUXF8   _097_  
+    .I0 _036_  
+    .I1 _037_  
+    .O _048_[6]  
+    .S in[7] 
+    ;
+LUT6  # 
+    .INIT 64'h15dd5aa44630df2f 
+    _098_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[3]  
+    .I3 in[2]  
+    .I4 in[6]  
+    .I5 in[5]  
+    .O _044_ 
+    ;
+LUT6  # 
+    .INIT 64'he823908cfc5daf4b 
+    _099_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[3]  
+    .I3 in[2]  
+    .I4 in[6]  
+    .I5 in[5]  
+    .O _045_ 
+    ;
+MUXF7   _100_  
+    .I0 _044_  
+    .I1 _045_  
+    .O _042_  
+    .S in[4] 
+    ;
+LUT6  # 
+    .INIT 64'hd585a9d11874d339 
+    _101_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[3]  
+    .I3 in[2]  
+    .I4 in[6]  
+    .I5 in[5]  
+    .O _046_ 
+    ;
+LUT6  # 
+    .INIT 64'h4e1056fd4339d05b 
+    _102_  
+    .I0 in[1]  
+    .I1 in[0]  
+    .I2 in[3]  
+    .I3 in[2]  
+    .I4 in[6]  
+    .I5 in[5]  
+    .O _047_ 
+    ;
+MUXF7   _103_  
+    .I0 _046_  
+    .I1 _047_  
+    .O _043_  
+    .S in[4] 
+    ;
+MUXF8   _104_  
+    .I0 _042_  
+    .I1 _043_  
+    .O _048_[7]  
+    .S in[7] 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _105_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[0]  
+    .Q out[0]  
+    .R 1'h0 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _106_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[1]  
+    .Q out[1]  
+    .R 1'h0 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _107_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[2]  
+    .Q out[2]  
+    .R 1'h0 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _108_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[3]  
+    .Q out[3]  
+    .R 1'h0 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _109_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[4]  
+    .Q out[4]  
+    .R 1'h0 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _110_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[5]  
+    .Q out[5]  
+    .R 1'h0 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _111_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[6]  
+    .Q out[6]  
+    .R 1'h0 
+    ;
+FDRE   # 
+    .INIT 1'hx 
+    _112_  
+    .C clk  
+    .CE 1'h1  
+    .D _048_[7]  
+    .Q out[7]  
+    .R 1'h0 
+    ;
+endmodule
