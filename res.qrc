@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pic/npu_logo.jpg</file>
+        <file>pic/tec.jpg</file>
+    </qresource>
+</RCC>
