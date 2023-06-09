@@ -12,18 +12,17 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
-class Widget : public QWidget
-
-{
-    Q_OBJECT
+class Widget : public QWidget {
+Q_OBJECT
 
 public:
     Widget(QWidget *parent = nullptr);
+
     ~Widget();
 
     FirstWidget *page1 = NULL;//用来保存 第1页实例化对象的地址
 
-    void paintEvent(QPaintEvent* event);//绘制第0页图像
+    void paintEvent(QPaintEvent *event);//绘制第0页图像
 
 private:
     Ui::Widget *ui;
