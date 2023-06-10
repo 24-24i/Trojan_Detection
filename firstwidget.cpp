@@ -75,6 +75,24 @@ FirstWidget::FirstWidget(QWidget *parent) :
         file.open(QIODevice::ReadOnly);
         QByteArray array = file.readAll();
         ui->ftext->setText(array);
+        ui->ftext->setReadOnly(true);
+
+        // 关键词高亮显示（未实现）
+        if (!array.isEmpty()) {
+            QTextDocument *document = ui->ftext->document();
+            bool found = false;
+            QTextCursor highlight_cursor(document);
+            QTextCursor cursor(document);
+
+            cursor.beginEditBlock();
+            QTextCharFormat color_format(highlight_cursor.charFormat());
+            color_format.setForeground(Qt::red);   //字体颜色
+            color_format.setBackground(Qt::blue);  //背景颜色
+            QStringList keyWordList;
+            keyWordList<<"LUT"<<"BUF"<<"MUX"<<"FDRE"<<"IBUF"; //关键词列表
+
+        }
+
     });
 
     /*stackwidget1*/
@@ -170,6 +188,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
             file.open(QIODevice::ReadOnly);
             QByteArray array = file.readAll();
             ui->textEdit->append(array);
+            ui->textEdit->setReadOnly(true);
         }
 
         std::vector<double> data;
