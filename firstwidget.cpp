@@ -264,7 +264,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         chart->createDefaultAxes();
         chart->setAxisX(axisX, series);
         chart->setAxisY(axisY, series);
-        chart->axes(Qt::Vertical).first()->setRange(0, (biggest / 100 + 2) * 100);
+        chart->axes(Qt::Vertical).first()->setRange(0, (round(biggest / 100.0) + 1) * 100);
         axisX->setLabelsFont(QFont("Arial", 5));
         axisY->setLabelsFont(QFont("Arial", 6));
         axisY->setLabelFormat("%d");
