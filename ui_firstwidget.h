@@ -72,7 +72,7 @@ public:
     {
         if (FirstWidget->objectName().isEmpty())
             FirstWidget->setObjectName("FirstWidget");
-        FirstWidget->resize(1053, 895);
+        FirstWidget->resize(1200, 712);
         gridLayout = new QGridLayout(FirstWidget);
         gridLayout->setObjectName("gridLayout");
         stackedWidget = new QStackedWidget(FirstWidget);
@@ -176,27 +176,35 @@ public:
         __qtreewidgetitem->setText(0, QString::fromUtf8("1"));
         treeWidget->setHeaderItem(__qtreewidgetitem);
         treeWidget->setObjectName("treeWidget");
-        treeWidget->setMaximumSize(QSize(256, 772));
+        treeWidget->setMinimumSize(QSize(0, 606));
+        treeWidget->setMaximumSize(QSize(256, 606));
         treeWidget->setLineWidth(0);
 
-        horizontalLayout_4->addWidget(treeWidget, 0, Qt::AlignLeft);
+        horizontalLayout_4->addWidget(treeWidget);
 
         widget_4 = new QWidget(widget_5);
         widget_4->setObjectName("widget_4");
+        widget_4->setMinimumSize(QSize(0, 620));
         verticalLayout_2 = new QVBoxLayout(widget_4);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setObjectName("verticalLayout_2");
         verticalLayout_2->setContentsMargins(9, 9, -1, -1);
         label = new QLabel(widget_4);
         label->setObjectName("label");
-        label->setMinimumSize(QSize(0, 500));
+        label->setMinimumSize(QSize(950, 480));
+        label->setMaximumSize(QSize(950, 480));
+        label->setTextFormat(Qt::PlainText);
+        label->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        label->setMargin(0);
 
-        verticalLayout_2->addWidget(label);
+        verticalLayout_2->addWidget(label, 0, Qt::AlignHCenter|Qt::AlignTop);
 
         textEdit = new QTextEdit(widget_4);
         textEdit->setObjectName("textEdit");
+        textEdit->setMinimumSize(QSize(930, 120));
+        textEdit->setMaximumSize(QSize(930, 120));
 
-        verticalLayout_2->addWidget(textEdit);
+        verticalLayout_2->addWidget(textEdit, 0, Qt::AlignHCenter|Qt::AlignBottom);
 
 
         horizontalLayout_4->addWidget(widget_4);

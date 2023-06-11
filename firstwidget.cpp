@@ -24,6 +24,7 @@
 #include <QtCharts/QBarCategoryAxis>
 #include <QtCharts/QAbstractBarSeries>
 #include <QtCharts/QAbstractAxis>
+#include <highlighter.h>>
 
 QT_USE_NAMESPACE
 
@@ -77,20 +78,9 @@ FirstWidget::FirstWidget(QWidget *parent) :
         ui->ftext->setText(array);
         ui->ftext->setReadOnly(true);
 
-        // 关键词高亮显示（未实现）
+        // 关键词高亮显示
         if (!array.isEmpty()) {
-            QTextDocument *document = ui->ftext->document();
-            bool found = false;
-            QTextCursor highlight_cursor(document);
-            QTextCursor cursor(document);
-
-            cursor.beginEditBlock();
-            QTextCharFormat color_format(highlight_cursor.charFormat());
-            color_format.setForeground(Qt::red);   //字体颜色
-            color_format.setBackground(Qt::blue);  //背景颜色
-            QStringList keyWordList;
-            keyWordList<<"LUT"<<"BUF"<<"MUX"<<"FDRE"<<"IBUF"; //关键词列表
-
+            KeywordHighlighter *highlighter = new KeywordHighlighter(ui->ftext->document());
         }
 
     });
@@ -187,6 +177,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
             QFile file(path_temp);
             file.open(QIODevice::ReadOnly);
             QByteArray array = file.readAll();
+            ui->textEdit->setText("输出（各LUT的信息熵）：");
             ui->textEdit->append(array);
             ui->textEdit->setReadOnly(true);
         }
@@ -274,7 +265,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         series->attachAxis(axisY);
 
         chartView->setChart(chart);
-        chartView->resize(950, 525);
+        chartView->resize(950, 500);
         chartView->setRenderHint(QPainter::Antialiasing);
         chartView->show();
         chartView->repaint();
@@ -328,7 +319,7 @@ void FirstWidget::savefile() {
 
 void FirstWidget::clear() {
     ui->textEdit->clear();
-    ui->textEdit->setText("输出：");
+    ui->textEdit->setText("输出（各LUT的信息熵）：");
     ui->label->clear();
 }
 

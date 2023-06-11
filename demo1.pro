@@ -11,11 +11,13 @@ CONFIG += c++17
 
 SOURCES += \
     firstwidget.cpp \
+    highlighter.cpp \
     main.cpp \
     widget.cpp
 
 HEADERS += \
     firstwidget.h \
+    highlighter.h \
     widget.h
 
 FORMS += \

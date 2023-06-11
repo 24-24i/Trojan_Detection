@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1053</width>
-    <height>895</height>
+    <width>1200</width>
+    <height>712</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -209,12 +209,18 @@
           <property name="bottomMargin">
            <number>5</number>
           </property>
-          <item alignment="Qt::AlignLeft">
+          <item>
            <widget class="QTreeWidget" name="treeWidget">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>606</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
               <width>256</width>
-              <height>772</height>
+              <height>606</height>
              </size>
             </property>
             <property name="lineWidth">
@@ -229,6 +235,12 @@
           </item>
           <item>
            <widget class="QWidget" name="widget_4" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>620</height>
+             </size>
+            </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
              <property name="spacing">
               <number>6</number>
@@ -239,21 +251,48 @@
              <property name="topMargin">
               <number>9</number>
              </property>
-             <item>
+             <item alignment="Qt::AlignHCenter|Qt::AlignTop">
               <widget class="QLabel" name="label">
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
-                 <height>500</height>
+                 <width>950</width>
+                 <height>480</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>950</width>
+                 <height>480</height>
                 </size>
                </property>
                <property name="text">
                 <string/>
                </property>
+               <property name="textFormat">
+                <enum>Qt::PlainText</enum>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
               </widget>
              </item>
-             <item>
+             <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
               <widget class="QTextEdit" name="textEdit">
+               <property name="minimumSize">
+                <size>
+                 <width>930</width>
+                 <height>120</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>930</width>
+                 <height>120</height>
+                </size>
+               </property>
                <property name="html">
                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
