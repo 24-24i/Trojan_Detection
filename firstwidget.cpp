@@ -45,6 +45,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
     ui->stackedWidget->setCurrentIndex(0);
     // 布局控件参数调整
     ui->verticalSpacer->changeSize(4, 4);//弹簧长度
+    ui->textEdit->setText("输出（各LUT的信息熵）：");
 
     /*stackwidget0*/
     // 可视化分析
@@ -52,7 +53,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         if (isAnalaysized == true) {
             ui->stackedWidget->setCurrentIndex(1);
         } else {
-            QMessageBox::warning(this, "解析错误", "尚未选择文件!");
+            QMessageBox::warning(this, "解析错误", "尚未选择文件进行解析!");
         }
     });
 
@@ -177,9 +178,9 @@ FirstWidget::FirstWidget(QWidget *parent) :
             QFile file(path_temp);
             file.open(QIODevice::ReadOnly);
             QByteArray array = file.readAll();
-            ui->textEdit->setText("输出（各LUT的信息熵）：");
+//            ui->textEdit->setText("输出（各LUT的信息熵）：");
             ui->textEdit->append(array);
-            ui->textEdit->setReadOnly(true);
+//            ui->textEdit->setReadOnly(true);
         }
 
         std::vector<double> data;
@@ -326,4 +327,6 @@ void FirstWidget::clear() {
 void FirstWidget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     QPixmap pixMap;
+
+
 }
