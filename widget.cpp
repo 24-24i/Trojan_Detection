@@ -10,7 +10,7 @@ Widget::Widget(QWidget *parent)
         : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
     setFixedSize(1200, 700);
-    setWindowIcon(QIcon("./pic/logo.jpg"));
+    setWindowIcon(QIcon(":/pic/logo.jpg"));
 
     //居中显示
     QScreen *desk = QGuiApplication::primaryScreen();
