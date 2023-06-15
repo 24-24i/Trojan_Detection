@@ -271,7 +271,7 @@ public:
 
         retranslateUi(FirstWidget);
 
-        stackedWidget->setCurrentIndex(1);
+        stackedWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(FirstWidget);
@@ -292,7 +292,7 @@ public:
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">\350\276\223\345\207\272\357\274\232</p></body></html>", nullptr));
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
         selectAll->setText(QCoreApplication::translate("FirstWidget", "\345\205\250\351\200\211", nullptr));
         getIMG->setText(QCoreApplication::translate("FirstWidget", "\347\224\237\346\210\220\345\233\276\345\203\217", nullptr));
         spb2->setText(QCoreApplication::translate("FirstWidget", "\344\277\235\345\255\230\345\233\276\345\203\217", nullptr));

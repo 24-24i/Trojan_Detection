@@ -61,7 +61,18 @@ FirstWidget::FirstWidget(QWidget *parent) :
     analyzeTimer = new QTimer(this); //初始化定时器
     analyzeTimer->setInterval(30); //设置间隔
     // 进度条开始和一键解析按钮关联
-    connect(ui->fpb3, &QPushButton::clicked, this, &FirstWidget::onfpb3begin);
+    //connect(ui->fpb3, &QPushButton::clicked, this, &FirstWidget::onfpb3begin);
+    connect(ui->fpb3, &QPushButton::clicked, [=]() {
+        if (isSelectFile==true)
+        {
+            onfpb3begin();
+        }
+        else
+        {
+            QMessageBox::warning(this, "错误", "尚未选择文件");
+        }
+        });
+
     // 时间到后 调用超时函数，弹出提示框
     connect(analyzeTimer, &QTimer::timeout, this, &FirstWidget::onfpb3timeout);
     //清空数据和图像
@@ -79,6 +90,8 @@ FirstWidget::FirstWidget(QWidget *parent) :
         ui->ftext->setText(array);
         ui->ftext->setReadOnly(true);
 
+        //设置选择文件为true,这样便可以进行一键解析
+        isSelectFile = true;
         // 关键词高亮显示
         if (!array.isEmpty()) {
             KeywordHighlighter *highlighter = new KeywordHighlighter(ui->ftext->document());

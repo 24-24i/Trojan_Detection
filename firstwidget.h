@@ -53,7 +53,7 @@ private:
 
     QTimer *analyzeTimer;//定时器
     bool isAnalaysized = false;//如果没有进行一键解析，就不能进行可视化分析
-
+    bool isSelectFile = false;//如果没有选择文件，就不能进行一键解析
     void GenerateDataGraph(const QStringList &statFilePathList);
 
     void DrawImage(std::vector<double> data);
