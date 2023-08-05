@@ -22,9 +22,10 @@
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QCategoryAxis>
 #include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QStackedBarSeries>
 #include <QtCharts/QAbstractBarSeries>
 #include <QtCharts/QAbstractAxis>
-#include <highlighter.h>>
+#include <highlighter.h>
 
 QT_USE_NAMESPACE
 
@@ -121,7 +122,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
     QTreeWidgetItem *rootNode = new QTreeWidgetItem(ui->treeWidget, QStringList() << "目录");
     rootNode->setFlags(rootNode->flags() & ~Qt::ItemIsSelectable & ~Qt::ItemIsUserCheckable);
     QString folderPath = "./Outputs"; // 存储 stat 文件的文件夹路径
-    QStringList statFilePathList; //存储 stat 文件的路径
+    QStringList statFilePathList; // 存储 stat 文件的路径
     if (!folderPath.isEmpty()) {
         QDir dir(folderPath);
         dir.setFilter(QDir::Files);
@@ -159,11 +160,8 @@ FirstWidget::FirstWidget(QWidget *parent) :
         ui->selectAll->setText(isSelectAll ? "全选" : "全不选");
     });
 
-
     // 图像生成键
     connect(ui->getIMG, &QPushButton::clicked, [=]() {
-
-        // 获取数据
 
         // 遍历节点，获取选中的节点
         QList<QTreeWidgetItem *> itemList;
@@ -179,25 +177,33 @@ FirstWidget::FirstWidget(QWidget *parent) :
             QMessageBox::warning(this, "无法生成图像", "请至少选择一个节点");
             return;
         }
-        // 提取数据
+        // 获取文件路径列表
         std::vector<std::string> paths;
         for (auto &item: itemList) {
             QString path = folderPath + "/" + item->text(0).trimmed() + ".stat";
             paths.push_back(path.toStdString());
         }
-        //将数据写入textEdit
+        // 将数据写入textEdit
         for (std::string path: paths) {
             QString path_temp = QString::fromStdString(path);
             QFile file(path_temp);
             file.open(QIODevice::ReadOnly);
             QByteArray array = file.readAll();
-//            ui->textEdit->setText("输出（各LUT的信息熵）：");
             ui->textEdit->append(array);
-//            ui->textEdit->setReadOnly(true);
+            // ui->textEdit->setReadOnly(true);
         }
 
-        std::vector<double> data;
+        QStackedBarSeries *series = new QStackedBarSeries();
+
         for (auto &file: paths) {
+
+            std::string base_filename = file.substr(file.find_last_of("/\\") + 1); // 获取文件名和扩展名
+            std::string::size_type p(base_filename.find_last_of('.')); // 获取最后一个点的位置
+            std::string fileName = base_filename.substr(0, p); // 获取文件名
+
+            auto *set = new QBarSet(QString::fromStdString(fileName)); // 初始化BarSet
+            std::vector<double> data;
+
             std::ifstream in(file);
             if (in) { // 将数据添加进序列
                 std::string line;
@@ -212,75 +218,65 @@ FirstWidget::FirstWidget(QWidget *parent) :
                         data.push_back(std::stod(tokens.back()));
                 }
             }
+
+            QVector<double> vector_data(data.size());
+            std::copy(data.begin(), data.end(), vector_data.begin());
+
+            QVector<int> hist_data(20);
+            for (int i = 0; i < vector_data.size(); ++i) {
+                int index = qFloor((vector_data[i]) / 0.05);
+                if (index >= 0 && index < hist_data.size()) {
+                    hist_data[index]++;
+                }
+                if (index == 20) {
+                    hist_data[19]++;
+                }
+            }
+            for (int i = 0; i < 20; i++) {
+                *set << hist_data[i];
+            }
+
+            series->append(set);
         }
 
-        // 绘制图像
-
-        QChartView *chartView = new QChartView(this);
         QChart *chart = new QChart();
-        QBarSeries *series = new QBarSeries(chart);
-
-        // 生成直方图数据并添加数据至series
-        QVector<double> vector_data(data.size());
-        std::copy(data.begin(), data.end(), vector_data.begin());
-
-        QVector<int> hist_data(20);
-        int start = 0;
-        int end = 1;
-        double interval = (end - start) / 20.0;
-        for (int i = 0; i < vector_data.size(); ++i) {
-            int index = qFloor((vector_data[i] - start) / interval);
-            if (index >= 0 && index < hist_data.size()) {
-                hist_data[index]++;
-            }
-            if (index == 20) {
-                hist_data[19]++;
-            }
-        }
-        auto max = std::max_element(std::begin(hist_data), std::end(hist_data));
-        int biggest = *max;
-
-        QBarSet *set = new QBarSet("");
-        for (int i = 0; i < 20; i++) {
-            *set << hist_data[i];
-        }
-
-        series->append(set);
-        series->setLabelsVisible(true);
-        chart->legend()->setVisible(false);
         chart->addSeries(series);
-        series->setLabelsPosition(QAbstractBarSeries::LabelsOutsideEnd);
-        set->setLabelColor(Qt::black);
+        chart->legend()->setVisible(true);
+        chart->legend()->setAlignment(Qt::AlignBottom);
+
+        series->setLabelsVisible(false);
+        // series->setLabelsPosition(QAbstractBarSeries::LabelsOutsideEnd);
         series->setBarWidth(0.75);
 
-        // 创建横纵轴对象，设置标签
-        QBarCategoryAxis *axisX = new QBarCategoryAxis();
-        QValueAxis *axisY = new QValueAxis();
-
+        // 横纵轴与标签
         QStringList categories;
-        for (int i = 0; i < hist_data.size(); i++) {
-            // 显示0.00-0.05, 0.05-0.10, ..., 0.95-1.00标签
+        for (int i = 0; i < 20; i++) {
+            // 0.00-0.05, 0.05-0.10, ..., 0.95-1.00标签
             QString label = QString("%1-%2").arg(i * 0.05, 0, 'f', 2).arg((i + 1) * 0.05, 0, 'f', 2);
             categories << label;
         }
 
-        // 标签格式设置
+        QBarCategoryAxis *axisX = new QBarCategoryAxis();
         axisX->append(categories);
+        axisX->setLabelsFont(QFont("Arial", 5));
+        QValueAxis *axisY = new QValueAxis();
+        axisY->setLabelsFont(QFont("Arial", 8));
+        axisY->setLabelFormat("%d");
+
+        // 标签格式设置
         chart->createDefaultAxes();
         chart->setAxisX(axisX, series);
         chart->setAxisY(axisY, series);
-        chart->axes(Qt::Vertical).first()->setRange(0, (round(biggest / 100.0) + 1) * 100);
-        axisX->setLabelsFont(QFont("Arial", 5));
-        axisY->setLabelsFont(QFont("Arial", 6));
-        axisY->setLabelFormat("%d");
 
         // 将序列与坐标轴关联起来
         series->attachAxis(axisX);
         series->attachAxis(axisY);
 
+        QChartView *chartView = new QChartView(chart);
         chartView->setChart(chart);
         chartView->resize(950, 500);
         chartView->setRenderHint(QPainter::Antialiasing);
+        chartView->setWindowFlags(Qt::WindowStaysOnBottomHint);
         chartView->show();
         chartView->repaint();
 
@@ -292,7 +288,6 @@ FirstWidget::FirstWidget(QWidget *parent) :
         // 将QPixmap显示为QLabel
         ui->label->setPixmap(pixmap);
 
-        // QMessageBox::information(this, "生成数据图", "生成成功");
     });
 
 }
@@ -302,12 +297,12 @@ FirstWidget::~FirstWidget() {
 }
 
 
-void FirstWidget::onfpb3begin()//开始函数
+void FirstWidget::onfpb3begin() // 开始函数
 {
     analyzeTimer->start();
 }
 
-void FirstWidget::onfpb3timeout()//超时函数
+void FirstWidget::onfpb3timeout() // 超时函数
 {
     int currentvalue = ui->progressBar->value();
     if (currentvalue >= ui->progressBar->maximum()) {
@@ -340,6 +335,4 @@ void FirstWidget::clear() {
 void FirstWidget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     QPixmap pixMap;
-
-
 }
