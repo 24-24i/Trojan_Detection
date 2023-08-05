@@ -45,12 +45,12 @@ FirstWidget::FirstWidget(QWidget *parent) :
     // 默认情况下显示0号页
     ui->stackedWidget->setCurrentIndex(0);
     // 布局控件参数调整
-    ui->verticalSpacer->changeSize(4, 4);//弹簧长度
+    ui->verticalSpacer->changeSize(4, 4); // 弹簧长度
     ui->textEdit->setText("输出（各LUT的信息熵）：");
 
     /*stackwidget0*/
     // 可视化分析
-    connect(ui->fpb1, &QPushButton::clicked, [=]() {
+    connect(ui->fpb1, &QPushButton::clicked, this, [=]() {
         if (isAnalaysized == true) {
             ui->stackedWidget->setCurrentIndex(1);
         } else {
@@ -59,11 +59,11 @@ FirstWidget::FirstWidget(QWidget *parent) :
     });
 
     // 进度条相关操作
-    analyzeTimer = new QTimer(this); //初始化定时器
-    analyzeTimer->setInterval(30); //设置间隔
+    analyzeTimer = new QTimer(this); // 初始化定时器
+    analyzeTimer->setInterval(30); // 设置间隔
     // 进度条开始和一键解析按钮关联
-    //connect(ui->fpb3, &QPushButton::clicked, this, &FirstWidget::onfpb3begin);
-    connect(ui->fpb3, &QPushButton::clicked, [=]() {
+    // connect(ui->fpb3, &QPushButton::clicked, this, &FirstWidget::onfpb3begin);
+    connect(ui->fpb3, &QPushButton::clicked, this, [=]() {
         if (isSelectFile==true)
         {
             onfpb3begin();
@@ -76,40 +76,40 @@ FirstWidget::FirstWidget(QWidget *parent) :
 
     // 时间到后 调用超时函数，弹出提示框
     connect(analyzeTimer, &QTimer::timeout, this, &FirstWidget::onfpb3timeout);
-    //清空数据和图像
+    // 清空数据和图像
     connect(ui->clearButton, &QPushButton::clicked, this, &FirstWidget::clear);
 
     // 文件选择并展示
-    connect(ui->fpb2, &QPushButton::clicked, [=]() {
-        //选择文件对话框
+    connect(ui->fpb2, &QPushButton::clicked, this, [=]() {
+        // 选择文件对话框
         QString path = QFileDialog::getOpenFileName(this, "打开文件");
         ui->fileedit->setText(path);
-        //读取内容 放到text框里
+        // 读取内容 放到text框里
         QFile file(path);
         file.open(QIODevice::ReadOnly);
         QByteArray array = file.readAll();
         ui->ftext->setText(array);
         ui->ftext->setReadOnly(true);
 
-        //设置选择文件为true,这样便可以进行一键解析
+        // 设置选择文件为true,这样便可以进行一键解析
         isSelectFile = true;
         // 关键词高亮显示
         if (!array.isEmpty()) {
-            KeywordHighlighter *highlighter = new KeywordHighlighter(ui->ftext->document());
+            new KeywordHighlighter(ui->ftext->document());
         }
 
     });
 
     /*stackwidget1*/
     // 返回
-    connect(ui->spb0, &QPushButton::clicked, [=]() {
+    connect(ui->spb0, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(0);
     });
     // 退出
-    connect(ui->spb1, &QPushButton::clicked, [=]() {
+    connect(ui->spb1, &QPushButton::clicked, this, [=]() {
         this->close();
     });
-    connect(ui->quitButton, &QPushButton::clicked, [=]() {
+    connect(ui->quitButton, &QPushButton::clicked, this, [=]() {
         this->close();
     });
     // 保存图像
@@ -147,7 +147,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
     }
 
     // 全选键
-    connect(ui->selectAll, &QPushButton::clicked, [=]() {
+    connect(ui->selectAll, &QPushButton::clicked, this, [=]() {
         static bool isSelectAll = true;
         for (int i = 0; i < rootNode->childCount(); i++) {
             QTreeWidgetItem *item = rootNode->child(i);
@@ -161,7 +161,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
     });
 
     // 图像生成键
-    connect(ui->getIMG, &QPushButton::clicked, [=]() {
+    connect(ui->getIMG, &QPushButton::clicked, this, [=]() {
 
         // 遍历节点，获取选中的节点
         QList<QTreeWidgetItem *> itemList;
@@ -185,6 +185,12 @@ FirstWidget::FirstWidget(QWidget *parent) :
         }
         // 将数据写入textEdit
         for (std::string path: paths) {
+
+            std::string base_filename = path.substr(path.find_last_of("/\\") + 1);
+            std::string::size_type p(base_filename.find_last_of('.'));
+            std::string fileName = base_filename.substr(0, p);
+
+            ui->textEdit->append(QString::fromStdString(fileName + ":"));
             QString path_temp = QString::fromStdString(path);
             QFile file(path_temp);
             file.open(QIODevice::ReadOnly);
@@ -202,7 +208,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
             std::string fileName = base_filename.substr(0, p); // 获取文件名
 
             auto *set = new QBarSet(QString::fromStdString(fileName)); // 初始化BarSet
-            std::vector<double> data;
+            std::vector<double> data; // 存放模块中的原始数据
 
             std::ifstream in(file);
             if (in) { // 将数据添加进序列
@@ -221,8 +227,8 @@ FirstWidget::FirstWidget(QWidget *parent) :
 
             QVector<double> vector_data(data.size());
             std::copy(data.begin(), data.end(), vector_data.begin());
+            QVector<int> hist_data(20); // 存储数据分布情况
 
-            QVector<int> hist_data(20);
             for (int i = 0; i < vector_data.size(); ++i) {
                 int index = qFloor((vector_data[i]) / 0.05);
                 if (index >= 0 && index < hist_data.size()) {
@@ -248,35 +254,30 @@ FirstWidget::FirstWidget(QWidget *parent) :
         // series->setLabelsPosition(QAbstractBarSeries::LabelsOutsideEnd);
         series->setBarWidth(0.75);
 
-        // 横纵轴与标签
+        // 横纵轴标签
         QStringList categories;
         for (int i = 0; i < 20; i++) {
-            // 0.00-0.05, 0.05-0.10, ..., 0.95-1.00标签
+            // x轴0.00-0.05, 0.05-0.10, ..., 0.95-1.00标签
             QString label = QString("%1-%2").arg(i * 0.05, 0, 'f', 2).arg((i + 1) * 0.05, 0, 'f', 2);
             categories << label;
         }
-
         QBarCategoryAxis *axisX = new QBarCategoryAxis();
         axisX->append(categories);
         axisX->setLabelsFont(QFont("Arial", 5));
+        chart->addAxis(axisX, Qt::AlignBottom);
+        series->attachAxis(axisX);
         QValueAxis *axisY = new QValueAxis();
         axisY->setLabelsFont(QFont("Arial", 8));
         axisY->setLabelFormat("%d");
-
-        // 标签格式设置
-        chart->createDefaultAxes();
-        chart->setAxisX(axisX, series);
-        chart->setAxisY(axisY, series);
-
-        // 将序列与坐标轴关联起来
-        series->attachAxis(axisX);
+        chart->addAxis(axisY, Qt::AlignLeft);
         series->attachAxis(axisY);
 
+        // 显示直方图
         QChartView *chartView = new QChartView(chart);
-        chartView->setChart(chart);
-        chartView->resize(950, 500);
         chartView->setRenderHint(QPainter::Antialiasing);
         chartView->setWindowFlags(Qt::WindowStaysOnBottomHint);
+        chartView->setChart(chart);
+        chartView->resize(950, 500);
         chartView->show();
         chartView->repaint();
 
@@ -324,7 +325,6 @@ void FirstWidget::savefile() {
         QMessageBox::information(this, "保存图像", "保存成功!");
     }
 }
-
 
 void FirstWidget::clear() {
     ui->textEdit->clear();
