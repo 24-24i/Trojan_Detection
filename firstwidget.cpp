@@ -35,7 +35,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
     ui->setupUi(this);
 
     // 页面效果调整
-    setWindowIcon(QIcon(":/pic/logo.jpg"));
+    setWindowIcon(QIcon(":/pic/logo.png"));
     setFixedSize(1200, 700);
     // 居中显示
     QScreen *desk = QGuiApplication::primaryScreen();
@@ -137,16 +137,10 @@ FirstWidget::FirstWidget(QWidget *parent) :
     }
     for (const QString &statFilePath: statFilePathList) {
         QTreeWidgetItem *item = new QTreeWidgetItem(rootNode, QStringList()
-                << "    " + QFileInfo(statFilePath).fileName().split(".stat")[0]);
+                << QFileInfo(statFilePath).fileName().split(".stat")[0]);
         item->setFlags(item->flags() | Qt::ItemIsEnabled);
         item->setTextAlignment(0, Qt::AlignLeft);
-    }
-    for (int i = 0; i < rootNode->childCount(); i++) {
-        QTreeWidgetItem *item = rootNode->child(i);
-        QCheckBox *checkBox = new QCheckBox();
-        checkBox->setChecked(false);
-        checkBox->setStyleSheet("QCheckBox {}");
-        ui->treeWidget->setItemWidget(item, 0, checkBox);
+        item->setCheckState(0, Qt::Unchecked);
     }
 
     // 全选键
@@ -154,10 +148,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         static bool isSelectAll = true;
         for (int i = 0; i < rootNode->childCount(); i++) {
             QTreeWidgetItem *item = rootNode->child(i);
-            QCheckBox *checkBox = qobject_cast<QCheckBox *>(ui->treeWidget->itemWidget(item, 0));
-            if (checkBox) {
-                checkBox->setChecked(isSelectAll);
-            }
+            item->setCheckState(0, isSelectAll ? Qt::Checked : Qt::Unchecked);
         }
         isSelectAll = !isSelectAll;
         ui->selectAll->setText(isSelectAll ? "全选" : "全不选");
@@ -170,8 +161,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         QList<QTreeWidgetItem *> itemList;
         for (int i = 0; i < rootNode->childCount(); i++) {
             QTreeWidgetItem *item = rootNode->child(i);
-            QCheckBox *checkBox = qobject_cast<QCheckBox *>(ui->treeWidget->itemWidget(item, 0));
-            if (checkBox && checkBox->isChecked()) {
+            if (item->checkState(0) == Qt::Checked) {
                 itemList.append(item);
             }
         }
