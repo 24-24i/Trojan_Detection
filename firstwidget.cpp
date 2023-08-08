@@ -35,7 +35,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
     ui->setupUi(this);
 
     // 页面效果调整
-    setWindowIcon(QIcon(":/pic/logo.jpg"));
+    setWindowIcon(QIcon(":/pic/logo.png"));
     setFixedSize(1200, 700);
     // 居中显示
     QScreen *desk = QGuiApplication::primaryScreen();
