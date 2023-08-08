@@ -35,7 +35,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
     ui->setupUi(this);
 
     // 页面效果调整
-    setWindowIcon(QIcon(":/pic/logo.png"));
+    setWindowIcon(QIcon(":/pic/logo.jpg"));
     setFixedSize(1200, 700);
     // 居中显示
     QScreen *desk = QGuiApplication::primaryScreen();
@@ -119,7 +119,9 @@ FirstWidget::FirstWidget(QWidget *parent) :
     ui->treeWidget->setColumnCount(1);
     ui->treeWidget->header()->hide();
     ui->treeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->treeWidget->setIndentation(10);
     QTreeWidgetItem *rootNode = new QTreeWidgetItem(ui->treeWidget, QStringList() << "目录");
+    rootNode->setExpanded(true);
     rootNode->setFlags(rootNode->flags() & ~Qt::ItemIsSelectable & ~Qt::ItemIsUserCheckable);
     QString folderPath = "./Outputs"; // 存储 stat 文件的文件夹路径
     QStringList statFilePathList; // 存储 stat 文件的路径
@@ -137,6 +139,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         QTreeWidgetItem *item = new QTreeWidgetItem(rootNode, QStringList()
                 << "    " + QFileInfo(statFilePath).fileName().split(".stat")[0]);
         item->setFlags(item->flags() | Qt::ItemIsEnabled);
+        item->setTextAlignment(0, Qt::AlignLeft);
     }
     for (int i = 0; i < rootNode->childCount(); i++) {
         QTreeWidgetItem *item = rootNode->child(i);
@@ -201,6 +204,13 @@ FirstWidget::FirstWidget(QWidget *parent) :
 
         QStackedBarSeries *series = new QStackedBarSeries();
 
+        QList<QVector<double>> data_list;
+        if (!data_list.isEmpty()) {
+            data_list.clear();
+        }
+
+        double min = 1;
+
         for (auto &file: paths) {
 
             std::string base_filename = file.substr(file.find_last_of("/\\") + 1); // 获取文件名和扩展名
@@ -220,50 +230,67 @@ FirstWidget::FirstWidget(QWidget *parent) :
                     std::copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(),
                               std::back_inserter(tokens));
                     // 读取非空行数据
-                    if (!tokens.empty())
-                        data.push_back(std::stod(tokens.back()));
+                    if (!tokens.empty()) {
+                        double value = std::stod(tokens.back());
+                        data.push_back(value);
+                        // 更新全局最小元素
+                        if (value < min) {
+                            min = value;
+                        }
+                    }
                 }
+                QList<double> qList(data.begin(), data.end());
+                data_list.append(qList); // 将数据向量添加到data_list中
             }
+            series->append(set);
+        }
 
-            QVector<double> vector_data(data.size());
-            std::copy(data.begin(), data.end(), vector_data.begin());
+        double x = qMin(qBound(0, qFloor(min / 0.05), 19) * 0.05, 1.0); // 计算区间的开始值
+
+        for (int k = 0; k < series->count(); k++) {
+            QBarSet *set = series->barSets().at(k); // 获取第k个BarSet对象
+            QVector<double> vector_data = data_list[k];
             QVector<int> hist_data(20); // 存储数据分布情况
 
             for (int i = 0; i < vector_data.size(); ++i) {
-                int index = qFloor((vector_data[i]) / 0.05);
+                // 计算元素所属的区间的索引，添加对应频数
+                int index = qFloor((vector_data[i] - x) / ((1 - x) / 20));
                 if (index >= 0 && index < hist_data.size()) {
                     hist_data[index]++;
                 }
                 if (index == 20) {
-                    hist_data[19]++;
+                    hist_data[19]++; // 处理边界情况
                 }
             }
             for (int i = 0; i < 20; i++) {
-                *set << hist_data[i];
+                *set << hist_data[i]; // 将频数添加到BarSet对象中
             }
-
-            series->append(set);
         }
 
         QChart *chart = new QChart();
         chart->addSeries(series);
         chart->legend()->setVisible(true);
         chart->legend()->setAlignment(Qt::AlignBottom);
+        QMargins q;
+        q.setBottom(1);
+        chart->setMargins(q);
 
         series->setLabelsVisible(false);
         // series->setLabelsPosition(QAbstractBarSeries::LabelsOutsideEnd);
-        series->setBarWidth(0.75);
+        series->setBarWidth(0.85);
 
         // 横纵轴标签
         QStringList categories;
         for (int i = 0; i < 20; i++) {
-            // x轴0.00-0.05, 0.05-0.10, ..., 0.95-1.00标签
-            QString label = QString("%1-%2").arg(i * 0.05, 0, 'f', 2).arg((i + 1) * 0.05, 0, 'f', 2);
+            QString label = QString("%1-").arg(i * (1 - x) / 20 + x, 0, 'f', 4);
+            label.append("<br>");
+            label.append(QString("%1").arg((i + 1) * (1 - x) / 20 + x, 0, 'f', 4));
             categories << label;
         }
+
         QBarCategoryAxis *axisX = new QBarCategoryAxis();
         axisX->append(categories);
-        axisX->setLabelsFont(QFont("Arial", 5));
+        axisX->setLabelsFont(QFont("Arial", 7));
         chart->addAxis(axisX, Qt::AlignBottom);
         series->attachAxis(axisX);
         QValueAxis *axisY = new QValueAxis();
@@ -278,6 +305,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         chartView->setWindowFlags(Qt::WindowStaysOnBottomHint);
         chartView->setChart(chart);
         chartView->resize(950, 500);
+        //chartView->resize(1920, 1080);
         chartView->show();
         chartView->repaint();
 
@@ -288,7 +316,6 @@ FirstWidget::FirstWidget(QWidget *parent) :
 
         // 将QPixmap显示为QLabel
         ui->label->setPixmap(pixmap);
-
     });
 
 }
@@ -296,7 +323,6 @@ FirstWidget::FirstWidget(QWidget *parent) :
 FirstWidget::~FirstWidget() {
     delete ui;
 }
-
 
 void FirstWidget::onfpb3begin() // 开始函数
 {
@@ -316,7 +342,7 @@ void FirstWidget::onfpb3timeout() // 超时函数
 }
 
 void FirstWidget::savefile() {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Image"), "Trojan Detection",
+    QString filename = QFileDialog::getSaveFileName(this, tr("保存图像至"), "Trojan Detection",
                                                     tr("Images (*.png *.bmp *.jpg)")); //选择路径
     if (!filename.isEmpty()) {
         // 从标签中获取Pixmap，并将其保存到指定文件
