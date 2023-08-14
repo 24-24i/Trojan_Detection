@@ -52,6 +52,9 @@ private:
     Ui::FirstWidget *ui;
 
     QTimer *analyzeTimer;//定时器
+    QString folderPath;
+    QString openFileName;
+//    QTreeWidgetItem *rootNode=new QTreeWidgetItem();
     bool isAnalaysized = false;//如果没有进行一键解析，就不能进行可视化分析
     bool isSelectFile = false;//如果没有选择文件，就不能进行一键解析
     void GenerateDataGraph(const QStringList &statFilePathList);

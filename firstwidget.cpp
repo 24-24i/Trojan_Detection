@@ -15,7 +15,7 @@
 #include <sstream>
 #include <vector>
 #include <iterator>
-#include <io.h>
+//#include <io.h>
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
 #include <QtCharts/QBarSet>
@@ -26,6 +26,7 @@
 #include <QtCharts/QAbstractBarSeries>
 #include <QtCharts/QAbstractAxis>
 #include <highlighter.h>
+#include <QProcess>
 
 QT_USE_NAMESPACE
 
@@ -36,7 +37,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
 
     // 页面效果调整
     setWindowIcon(QIcon(":/pic/logo.png"));
-    setFixedSize(1200, 700);
+    setFixedSize(1700, 1000);
     // 居中显示
     QScreen *desk = QGuiApplication::primaryScreen();
     int wd = desk->size().width();
@@ -45,22 +46,51 @@ FirstWidget::FirstWidget(QWidget *parent) :
     // 默认情况下显示0号页
     ui->stackedWidget->setCurrentIndex(0);
     // 布局控件参数调整
-    ui->verticalSpacer->changeSize(4, 4); // 弹簧长度
+//    ui->verticalSpacer->changeSize(4, 4); // 弹簧长度
     ui->textEdit->setText("输出（各LUT的信息熵）：");
+    ui->processText->append("cmd:");
+    ui->ftext->append("file:");
 
-    /*stackwidget0*/
-    // 可视化分析
-    connect(ui->fpb1, &QPushButton::clicked, this, [=]() {
-        if (isAnalaysized == true) {
-            ui->stackedWidget->setCurrentIndex(1);
-        } else {
-            QMessageBox::warning(this, "解析错误", "尚未选择文件进行解析!");
+    // 左侧下拉目录（treewidget+信号槽连接）
+    ui->treeWidget->setColumnCount(1);
+    ui->treeWidget->header()->hide();
+    ui->treeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->treeWidget->setIndentation(10);
+    QTreeWidgetItem *rootNode = new QTreeWidgetItem(ui->treeWidget, QStringList() << "目录");
+    rootNode->setExpanded(true);
+    rootNode->setFlags(rootNode->flags() & ~Qt::ItemIsSelectable & ~Qt::ItemIsUserCheckable);
+
+    // 文件选择并展示
+    connect(ui->fpb2, &QPushButton::clicked, this, [=]() {
+        // 选择文件对话框
+        QString path = QFileDialog::getOpenFileName(this, "打开文件");
+        ui->fileedit->setText(path);
+        // 读取内容 放到text框里
+        QFile file(path);
+        file.open(QIODevice::ReadOnly);
+        QByteArray array = file.readAll();
+        ui->ftext->append(array);
+        ui->ftext->setReadOnly(true);
+
+        //给openFileName赋值
+        QFileInfo fileInfo(path); //创建一个QFileInfo对象
+        openFileName = fileInfo.fileName().split('.')[0]; //调用fileName()方法获取文件名
+        qDebug()<<("openFileName:")<<openFileName;
+
+        // 设置选择文件为true,这样便可以进行一键解析
+        isSelectFile = true;
+        // 关键词高亮显示
+        if (!array.isEmpty()) {
+            new KeywordHighlighter(ui->ftext->document());
         }
+
     });
 
-    // 进度条相关操作
+
+    // 进度条相关操作,一键解析
     analyzeTimer = new QTimer(this); // 初始化定时器
     analyzeTimer->setInterval(30); // 设置间隔
+
     // 进度条开始和一键解析按钮关联
     // connect(ui->fpb3, &QPushButton::clicked, this, &FirstWidget::onfpb3begin);
     connect(ui->fpb3, &QPushButton::clicked, this, [=]() {
@@ -79,31 +109,72 @@ FirstWidget::FirstWidget(QWidget *parent) :
     // 清空数据和图像
     connect(ui->clearButton, &QPushButton::clicked, this, &FirstWidget::clear);
 
-    // 文件选择并展示
-    connect(ui->fpb2, &QPushButton::clicked, this, [=]() {
-        // 选择文件对话框
-        QString path = QFileDialog::getOpenFileName(this, "打开文件");
-        ui->fileedit->setText(path);
-        // 读取内容 放到text框里
-        QFile file(path);
-        file.open(QIODevice::ReadOnly);
-        QByteArray array = file.readAll();
-        ui->ftext->setText(array);
-        ui->ftext->setReadOnly(true);
 
-        // 设置选择文件为true,这样便可以进行一键解析
-        isSelectFile = true;
-        // 关键词高亮显示
-        if (!array.isEmpty()) {
-            new KeywordHighlighter(ui->ftext->document());
+
+    /*stackwidget0*/
+    // 可视化分析
+    connect(ui->fpb1, &QPushButton::clicked, this, [=]() {
+        if (isAnalaysized == true) {
+            ui->stackedWidget->setCurrentIndex(1);
+//            // 左侧下拉目录（treewidget+信号槽连接）
+//            ui->treeWidget->setColumnCount(1);
+//            ui->treeWidget->header()->hide();
+//            ui->treeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+//            ui->treeWidget->setIndentation(10);
+//            rootNode = new QTreeWidgetItem(ui->treeWidget, QStringList() << "目录");
+//            rootNode->setExpanded(true);
+//            rootNode->setFlags(rootNode->flags() & ~Qt::ItemIsSelectable & ~Qt::ItemIsUserCheckable);
+//            folderPath = QString("./Outputs"); // 存储 stat 文件的文件夹路径
+            QStringList statFilePathList; // 存储 stat 文件的路径
+            if (!folderPath.isEmpty()) {
+                QDir dir(folderPath);
+                dir.setFilter(QDir::Files);
+                dir.setNameFilters(QStringList() << "*.stat");
+                QStringList statFileList = dir.entryList();
+                for (const QString &statFile: statFileList) {
+                    QString filePath = folderPath + "/" + statFile;
+                    statFilePathList.append(filePath);
+                }
+            }
+            for (const QString &statFilePath: statFilePathList) {
+                QTreeWidgetItem *item = new QTreeWidgetItem(rootNode, QStringList()
+                                                                          << QFileInfo(statFilePath).fileName().split(".stat")[0]);
+                item->setFlags(item->flags() | Qt::ItemIsEnabled);
+                item->setTextAlignment(0, Qt::AlignLeft);
+                item->setCheckState(0, Qt::Unchecked);
+            }
+
+        } else {
+            QMessageBox::warning(this, "解析错误", "尚未选择文件进行解析!");
         }
-
     });
 
+
+
+
+
     /*stackwidget1*/
-    // 返回
+    // 重新选择模块
+//    ui->spb0->setText("重新选择模块");
     connect(ui->spb0, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(0);
+        ui->fileedit->clear();
+        ui->ftext->clear();
+        ui->processText->clear();
+        ui->processText->append("cmd:");
+        ui->ftext->append("file:");
+//        ui->progressBar->reset();
+        ui->progressBar->setValue(0);
+        isAnalaysized = false;
+        isSelectFile = false;
+        clear();
+
+        // 假设 parent 是一个 QTreeWidgetItem 对象
+        QList<QTreeWidgetItem*> children = rootNode->takeChildren(); // 获取所有子节点的列表
+        foreach (QTreeWidgetItem* child, children) {
+            delete child; // 释放每个子节点的内存
+        }
+
     });
     // 退出
     connect(ui->spb1, &QPushButton::clicked, this, [=]() {
@@ -115,33 +186,6 @@ FirstWidget::FirstWidget(QWidget *parent) :
     // 保存图像
     connect(ui->spb2, &QPushButton::clicked, this, &FirstWidget::savefile);
 
-    // 左侧下拉目录（treewidget+信号槽连接）
-    ui->treeWidget->setColumnCount(1);
-    ui->treeWidget->header()->hide();
-    ui->treeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    ui->treeWidget->setIndentation(10);
-    QTreeWidgetItem *rootNode = new QTreeWidgetItem(ui->treeWidget, QStringList() << "目录");
-    rootNode->setExpanded(true);
-    rootNode->setFlags(rootNode->flags() & ~Qt::ItemIsSelectable & ~Qt::ItemIsUserCheckable);
-    QString folderPath = "./Outputs"; // 存储 stat 文件的文件夹路径
-    QStringList statFilePathList; // 存储 stat 文件的路径
-    if (!folderPath.isEmpty()) {
-        QDir dir(folderPath);
-        dir.setFilter(QDir::Files);
-        dir.setNameFilters(QStringList() << "*.stat");
-        QStringList statFileList = dir.entryList();
-        for (const QString &statFile: statFileList) {
-            QString filePath = folderPath + "/" + statFile;
-            statFilePathList.append(filePath);
-        }
-    }
-    for (const QString &statFilePath: statFilePathList) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(rootNode, QStringList()
-                << QFileInfo(statFilePath).fileName().split(".stat")[0]);
-        item->setFlags(item->flags() | Qt::ItemIsEnabled);
-        item->setTextAlignment(0, Qt::AlignLeft);
-        item->setCheckState(0, Qt::Unchecked);
-    }
 
     // 全选键
     connect(ui->selectAll, &QPushButton::clicked, this, [=]() {
@@ -294,7 +338,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         chartView->setRenderHint(QPainter::Antialiasing);
         chartView->setWindowFlags(Qt::WindowStaysOnBottomHint);
         chartView->setChart(chart);
-        chartView->resize(950, 500);
+        chartView->resize(1200,675);
         //chartView->resize(1920, 1080);
         chartView->show();
         chartView->repaint();
@@ -316,6 +360,59 @@ FirstWidget::~FirstWidget() {
 
 void FirstWidget::onfpb3begin() // 开始函数
 {
+
+    // Create a QProcess instance
+    QProcess process;
+
+    // Navigate to the desired directory where your commands should be executed
+    QString workingDirectory = ".";
+    process.setWorkingDirectory(workingDirectory);
+
+    QDir dir("Outputs");
+    if (dir.exists()) {
+        dir.removeRecursively();
+    }
+
+    // Execute "./stat_xilinx" command
+
+    process.start("./stat_xilinx");
+
+    ui->processText->append("./stat_xilinx\n");
+    qDebug("./stat_xilinx\n");
+
+//    // 发送 sub_modules ./src/syn.v 到终端
+//    process.write("sub_modules ./Sources/syn.v\n");
+//    process.waitForBytesWritten();
+//    qDebug("sub_modules ./Sources/syn.v");
+//    // 发送 source ./Scripts/example1.sc 到终端
+//    process.write("source ./Scripts/syn.sc\n");
+//    process.waitForBytesWritten();
+//    qDebug("source ./Scripts/syn.sc");
+
+    // 发送 sub_modules ./src/syn.v 到终端
+    QString cmd1=QString("sub_modules ./Sources/%1.v\n").arg(openFileName);
+    process.write(cmd1.toUtf8().data());
+    process.waitForBytesWritten();
+
+    ui->processText->append(cmd1);
+    qDebug(QString("sub_modules ./Sources/%1.v").arg(openFileName).toUtf8().data());
+    // 发送 source ./Scripts/syn.sc 到终端
+    QString cmd2=QString("source ./Scripts/%1.sc\n").arg(openFileName);
+    process.write(cmd2.toUtf8().data());
+    process.waitForBytesWritten();
+    ui->processText->append(cmd2);
+    qDebug(QString("source ./Scripts/%1.sc").arg(openFileName).toUtf8().data());
+
+    // 发送 exit 到终端
+    process.write("exit\n");
+    process.waitForBytesWritten();
+    ui->processText->append("exit");
+    qDebug("exit");
+    process.waitForFinished(-1); // Wait for the process to finish
+
+    folderPath = QString("./Outputs"); // 存储 stat 文件的文件夹路径
+
+
     analyzeTimer->start();
 }
 

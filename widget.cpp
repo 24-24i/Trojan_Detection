@@ -9,7 +9,7 @@
 Widget::Widget(QWidget *parent)
         : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
-    setFixedSize(1200, 700);
+    setFixedSize(1700, 1000);
     setWindowIcon(QIcon(":/pic/logo.png"));
 
     //居中显示
