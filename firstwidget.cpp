@@ -37,7 +37,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
 
     // 页面效果调整
     setWindowIcon(QIcon(":/pic/logo.png"));
-    setFixedSize(1700, 1000);
+    setFixedSize(2040, 1200);
     // 居中显示
     QScreen *desk = QGuiApplication::primaryScreen();
     int wd = desk->size().width();
@@ -338,7 +338,7 @@ FirstWidget::FirstWidget(QWidget *parent) :
         chartView->setRenderHint(QPainter::Antialiasing);
         chartView->setWindowFlags(Qt::WindowStaysOnBottomHint);
         chartView->setChart(chart);
-        chartView->resize(1200,675);
+        chartView->resize(1511,850);
         //chartView->resize(1920, 1080);
         chartView->show();
         chartView->repaint();

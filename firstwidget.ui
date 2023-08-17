@@ -229,13 +229,13 @@
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>606</height>
+              <height>1100</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>300</width>
-              <height>800</height>
+              <height>1100</height>
              </size>
             </property>
             <property name="lineWidth">
@@ -282,8 +282,8 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>1200</width>
-                 <height>800</height>
+                 <width>1600</width>
+                 <height>1000</height>
                 </size>
                </property>
                <property name="text">
@@ -304,13 +304,13 @@
               <widget class="QTextEdit" name="textEdit">
                <property name="minimumSize">
                 <size>
-                 <width>1200</width>
+                 <width>1500</width>
                  <height>200</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>1200</width>
+                 <width>1500</width>
                  <height>200</height>
                 </size>
                </property>

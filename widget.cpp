@@ -9,7 +9,7 @@
 Widget::Widget(QWidget *parent)
         : QWidget(parent), ui(new Ui::Widget) {
     ui->setupUi(this);
-    setFixedSize(1700, 1000);
+    setFixedSize(2040, 1200);
     setWindowIcon(QIcon(":/pic/logo.png"));
 
     //居中显示
@@ -34,7 +34,7 @@ Widget::Widget(QWidget *parent)
         this->page1->show();
     });
     //启动定时器，设置时间间隔
-    timer->start(2500);
+    timer->start(3500);
 
 }
 
